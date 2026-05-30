@@ -1,15 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Plataforma Nutrição</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantidade de Água Ideal</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
+    <h2>Importância da hidratação</h2>
+    <p>
+        Manter uma boa hidratação ajuda no funcionamento do organismo,
+        regula a temperatura corporal, melhora o transporte de nutrientes
+        e contribui para o desempenho físico e mental.
+    </p>
+    <form id="formAgua">
+      <label for="pesoAgua">Peso (kg):</label>
+      <input type="number" id="pesoAgua" placeholder="Calculadora de Água" required>
+      <button type="submit">Calcular</button>
+    </form>
+    <div id="resultadoAgua"></div><br>
 
-  <div class="container mt-5">
-    <h1>Plataforma Nutrição</h1>
-  </div>
+    <script>
+        $(document).ready(function() {
+          $("#formAgua").submit(function(event) {
+              event.preventDefault();
+              let peso = Number($("#pesoAgua").val());
+              let ml = peso * 35;
+              let litros = (ml / 1000).toFixed(2);
+              $("#resultadoAgua").html(`
+                  <p>Você deve beber aproximadamente <strong>${ml} ml</strong> de água por dia.</p>
+                  <p>Equivalente a <strong>${litros} litros</strong>.</p>
+              `);
+          });
+        });
 
-  <script type="module" src="/src/main.js"></script>
+    </script>
 </body>
 </html>
