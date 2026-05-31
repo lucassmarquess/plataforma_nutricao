@@ -20,7 +20,68 @@
     </form>
     <div id="resultadoAgua"></div><br>
 
+    <h2>O que é IMC</h2>
+    <p>
+        O Índice de Massa Corporal (IMC) é uma medida utilizada para avaliar
+        se o peso está adequado em relação à altura. Ele serve como referência
+        para identificar possíveis riscos relacionados ao baixo peso, sobrepeso
+        e obesidade.
+    </p>
+    <form id="imc">
+      <label for="pesoImc">Peso (kg)</label>
+      <input type="number" id="pesoImc" placeholder="Calculo de IMC" required><br>
+      <label for="alturaImc">Altura (cm)</label>
+      <input type="number" id="alturaImc" placeholder="Calculo de IMC" required>
+      <button type="submit">Calcular</button>
+    </form>
+    <div id="resultadoImc"></div><br>
+    <h2>Tabela de Referência IMC</h2>
+    <table border="1">
+        <tr>
+            <th>IMC</th>
+            <th>Classificação</th>
+        </tr>
+        <tr>
+            <td>Abaixo de 18,5</td>
+            <td>Abaixo do peso</td>
+        </tr>
+        <tr>
+            <td>18,5 a 24,9</td>
+            <td>Peso normal</td>
+        </tr>
+        <tr>
+            <td>25 a 29,9</td>
+            <td>Sobrepeso</td>
+        </tr>
+        <tr>
+            <td>30 ou mais</td>
+            <td>Obesidade</td>
+        </tr>
+    </table>
+
     <script>
+        function calcularIMC(peso, altura) {
+            return peso / (altura * altura);
+        }
+        function classificarIMC(imc) {
+            if (imc < 18.5) {
+                return "Abaixo do peso";
+            }
+            if (imc < 25) {
+                return "Peso normal";
+            }
+            if (imc < 30) {
+                return "Sobrepeso";
+            }
+            return "Obesidade";
+        }
+        function mostrarResultado(imc, classificacao) {
+            $("#resultadoImc").html(`
+                <h2>Resultado</h2>
+                <p>Seu IMC é <strong>${imc.toFixed(2)}</strong></p>
+                <p>Classificação: <strong>${classificacao}</strong></p>
+            `);
+        }
         $(document).ready(function() {
           $("#formAgua").submit(function(event) {
               event.preventDefault();
@@ -33,7 +94,17 @@
               `);
           });
         });
-
+        $(document).ready(function() {
+            $("#imc").submit(function(event) {
+                event.preventDefault();
+                let peso = Number($("#pesoImc").val());
+                let altura1 = Number($("#alturaImc").val());
+                let altura = altura1/100
+                let imc = calcularIMC(peso, altura);
+                let classificacao = classificarIMC(imc);
+                mostrarResultado(imc, classificacao);
+            });
+        });
     </script>
 </body>
 </html>
