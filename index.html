@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantidade de Água Ideal</title>
+    <title>Plataforma de Nutrição</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
@@ -58,8 +58,43 @@
             <td>Obesidade</td>
         </tr>
     </table>
+    <h2>Importancia dos Macro-Nutrientes</h2>
+    <p>
+        Os macronutrientes são essenciais para o funcionamento do organismo. As proteínas ajudam na construção e recuperação dos músculos e tecidos, os carboidratos fornecem energia para as atividades diárias e as gorduras contribuem para a produção de hormônios, absorção de vitaminas e reserva de energia. Uma alimentação equilibrada em macronutrientes é fundamental para a saúde, o desempenho físico e o bem-estar geral.
+    </p>
+    <form id="macro">
+      <label for="pesoMacro">Peso (kg)</label>
+      <input type="number" id="pesoMacro" placeholder="Calculo de Macros" required><br>
+      <label for="alturaMacro">Altura (cm)</label>
+      <input type="number" id="alturaMacro" placeholder="Calculo de Macros" required><br>
+      <label for="idadeMacro">Idade</label>
+      <input type="number" id="idadeMacro" placeholder="Calculo de Macros" required><br>
+      <select id="sexoMacro">
+        <option value="masc">Masculino</option>
+        <option value="fem">Feminino</option>
+      </select>
+      <button type="submit">Calcular</button>
+    </form>
+    <div id="resultadoMacro"></div><br>
 
     <script>
+        function tmb(peso, altura, idade, sexo){
+            if (sexo === 'fem'){
+                return (10*peso)+(6.25*altura)-(5*idade)-161
+            }
+            if (sexo === 'masc'){
+                return (10*peso)+(6.25*altura)-(5*idade)+5
+            }
+        }
+        function calcularProteina(peso){
+            return peso * 1.2;
+        }
+        function calcularCarboidrato(peso){
+            return peso * 3.5;
+        }
+        function calcularGorduras(tmb){
+            return (tmb*0.27)/9;
+        }
         function calcularIMC(peso, altura) {
             return peso / (altura * altura);
         }
@@ -74,13 +109,6 @@
                 return "Sobrepeso";
             }
             return "Obesidade";
-        }
-        function mostrarResultado(imc, classificacao) {
-            $("#resultadoImc").html(`
-                <h2>Resultado</h2>
-                <p>Seu IMC é <strong>${imc.toFixed(2)}</strong></p>
-                <p>Classificação: <strong>${classificacao}</strong></p>
-            `);
         }
         $(document).ready(function() {
           $("#formAgua").submit(function(event) {
@@ -102,7 +130,30 @@
                 let altura = altura1/100
                 let imc = calcularIMC(peso, altura);
                 let classificacao = classificarIMC(imc);
-                mostrarResultado(imc, classificacao);
+                $("#resultadoImc").html(`
+                    <h2>Resultado</h2>
+                    <p>Seu IMC é <strong>${imc.toFixed(2)}</strong></p>
+                    <p>Classificação: <strong>${classificacao}</strong></p>
+                `);
+            });
+        });
+        $(document).ready(function() {
+            $("#macro").submit(function(event) {
+                event.preventDefault();
+                let peso = Number($("#pesoMacro").val());
+                let altura = Number($("#alturaMacro").val());
+                let idade = Number($("#idadeMacro").val());
+                let sexo = String($("#sexoMacro").val());
+                let resultTmb = tmb(peso, altura, idade, sexo);
+                let proteina = calcularProteina(peso);
+                let carboidrato = calcularCarboidrato(peso);
+                let gordura = calcularGorduras(resultTmb);
+                $("#resultadoMacro").html(`
+                    <h2>Resultado</h2>
+                    <p>Proteínas: ${proteina.toFixed(1)} g</p>
+                    <p>Carboidratos: ${carboidrato.toFixed(1)} g</p>
+                    <p>Gorduras: ${gordura.toFixed(1)} g</p>
+                `);
             });
         });
     </script>
