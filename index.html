@@ -99,7 +99,48 @@
     </form>
     <div id="resultadoEnergia"></div><br>
 
+    <h2>Conversão de Macronutrientes em Calorias</h2>
+    <p>
+        Os macronutrientes fornecem energia para o organismo. Cada grama de proteína e carboidrato fornece 4 calorias, enquanto cada grama de gordura fornece 9 calorias. Conhecer a conversão dos macronutrientes em calorias ajuda no planejamento alimentar e no controle da ingestão energética diária.
+    </p>
+    <form id="calorias">
+        <label for="carbos">Carboidratos (g):</label>
+        <input type="number" id="carbos" placeholder="Ex: 200" required><br>
+        <label for="proteinas">Proteínas (g):</label>
+        <input type="number" id="proteinas" placeholder="Ex: 150" required><br>
+        <label for="gorduras">Gorduras (g):</label>
+        <input type="number" id="gorduras" placeholder="Ex: 60" required>
+        <button type="submit">Converter</button>
+    </form>
+    <div id="resultadoCalorias"></div><br>
+    <h2>Tabela de conversão de macronutrientes</h2>
+    <table border="1">
+        <tr>
+            <th>Macronutriente</th>
+            <th>Fator de conversão</th>
+        </tr>
+        <tr>
+            <td>Carboidratos</td>
+            <td>4 kcal por grama (kcal/g)</td>
+        </tr>
+        <tr>
+            <td>Proteínas</td>
+            <td>4 kcal por grama (kcal/g)</td>
+        </tr>
+        <tr>
+            <td>Gorduras</td>
+            <td>9 kcal por grama (kcal/g)</td>
+        </tr>
+    </table>
+
     <script>
+        function calcularCaloriasMacronutrientes(carbosG, proteinasG, gordurasG) {
+            const kcalCarbos = carbosG * 4;
+            const kcalProteinas = proteinasG * 4;
+            const kcalGorduras = gordurasG * 9;
+            const total = kcalCarbos + kcalProteinas + kcalGorduras;
+            return { kcalCarbos, kcalProteinas, kcalGorduras, total };
+        }
         function get(tmb){
             return tmb * 1.3;
         }
@@ -200,6 +241,30 @@
                         Seu Gasto Energético Total (GET) é de
                         <strong>${pegue.toFixed(0)} kcal/dia</strong>.
                     </p>
+                `);
+            });
+        });
+        $(document).ready(function() {
+            $("#calorias").submit(function(event) {
+                event.preventDefault();
+                const carbos = Number($("#carbos").val());
+                const proteinas = Number($("#proteinas").val());
+                const gorduras = Number($("#gorduras").val());
+                if (
+                    Number.isNaN(carbos) || carbos < 0 ||
+                    Number.isNaN(proteinas) || proteinas < 0 ||
+                    Number.isNaN(gorduras) || gorduras < 0
+                ) {
+                    $("#resultadoCalorias").html(`<p>Informe valores válidos para carboidratos, proteínas e gorduras.</p>`);
+                    return;
+                }
+                const { kcalCarbos, kcalProteinas, kcalGorduras, total } = calcularCaloriasMacronutrientes(carbos, proteinas, gorduras);
+                $("#resultadoCalorias").html(`
+                    <h2>Resultado</h2>
+                    <p>Carboidratos: <strong>${kcalCarbos.toFixed(0)} kcal</strong> (de ${carbos} g)</p>
+                    <p>Proteínas: <strong>${kcalProteinas.toFixed(0)} kcal</strong> (de ${proteinas} g)</p>
+                    <p>Gorduras: <strong>${kcalGorduras.toFixed(0)} kcal</strong> (de ${gorduras} g)</p>
+                    <p><strong>Calorias totais: ${total.toFixed(0)} kcal</strong></p>
                 `);
             });
         });
