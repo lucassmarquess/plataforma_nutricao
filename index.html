@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma de Nutrição</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Seu CSS -->
+    <link rel="stylesheet" href="src/style.css">
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 <body>
@@ -15,7 +19,7 @@
     </p>
     <form id="formAgua">
       <label for="pesoAgua">Peso (kg):</label>
-      <input type="number" id="pesoAgua" placeholder="Calculadora de Água" required>
+      <input type="number" id="pesoAgua" placeholder="Ex: 70" required>
       <button type="submit">Calcular</button>
     </form>
     <div id="resultadoAgua"></div><br>
@@ -29,9 +33,9 @@
     </p>
     <form id="imc">
       <label for="pesoImc">Peso (kg)</label>
-      <input type="number" id="pesoImc" placeholder="Calculo de IMC" required><br>
+      <input type="number" id="pesoImc" placeholder="Ex: 70" required><br>
       <label for="alturaImc">Altura (cm)</label>
-      <input type="number" id="alturaImc" placeholder="Calculo de IMC" required>
+      <input type="number" id="alturaImc" placeholder="Ex: 170" required>
       <button type="submit">Calcular</button>
     </form>
     <div id="resultadoImc"></div><br>
@@ -64,11 +68,11 @@
     </p>
     <form id="macro">
       <label for="pesoMacro">Peso (kg)</label>
-      <input type="number" id="pesoMacro" placeholder="Calculo de Macros" required><br>
+      <input type="number" id="pesoMacro" placeholder="Ex: 70" required><br>
       <label for="alturaMacro">Altura (cm)</label>
-      <input type="number" id="alturaMacro" placeholder="Calculo de Macros" required><br>
+      <input type="number" id="alturaMacro" placeholder="Ex: 170" required><br>
       <label for="idadeMacro">Idade</label>
-      <input type="number" id="idadeMacro" placeholder="Calculo de Macros" required><br>
+      <input type="number" id="idadeMacro" placeholder="Ex: 25" required><br>
       <select id="sexoMacro">
         <option value="masc">Masculino</option>
         <option value="fem">Feminino</option>
@@ -86,11 +90,11 @@
     </p>
     <form id="energia">
       <label for="pesoEnergia">Peso (kg)</label>
-      <input type="number" id="pesoEnergia" placeholder="Calculo Energético" required><br>
+      <input type="number" id="pesoEnergia" placeholder="Ex: 70" required><br>
       <label for="alturaEnergia">Altura (cm)</label>
-      <input type="number" id="alturaEnergia" placeholder="Calculo Energético" required><br>
+      <input type="number" id="alturaEnergia" placeholder="Ex: 170" required><br>
       <label for="idadeEnergia">Idade</label>
-      <input type="number" id="idadeEnergia" placeholder="Calculo Energético" required><br>
+      <input type="number" id="idadeEnergia" placeholder="Ex: 25" required><br>
       <select id="sexoEnergia">
         <option value="masc">Masculino</option>
         <option value="fem">Feminino</option>
@@ -133,7 +137,40 @@
         </tr>
     </table>
 
+    <h2>Déficit e Superávit Calórico</h2>
+    <p>
+        O déficit e o superávit calórico são estratégias utilizadas para controlar o peso corporal. O déficit calórico ocorre quando a ingestão de calorias é menor que o gasto energético diário, favorecendo a perda de peso. Já o superávit calórico acontece quando o consumo de calorias é maior que o gasto do organismo, contribuindo para o ganho de peso e massa muscular. Ambos devem ser aplicados de forma equilibrada e de acordo com os objetivos individuais.
+    </p>
+    <form id="deficitSuperavit">
+        <label for="pesoDS">Peso (kg)</label>
+        <input type="number" id="pesoDS" placeholder="Ex: 70" required><br>
+        <label for="alturaDS">Altura (cm)</label>
+        <input type="number" id="alturaDS" placeholder="Ex: 170" required><br>
+        <label for="idadeDS">Idade</label>
+        <input type="number" id="idadeDS" placeholder="Ex: 25" required><br>
+        <label for="sexoDS">Sexo</label>
+        <select id="sexoDS">
+            <option value="masc">Masculino</option>
+            <option value="fem">Feminino</option>
+        </select><br>
+        <label for="objetivoDS">Objetivo</label>
+        <select id="objetivoDS">
+            <option value="deficit">Déficit Calórico</option>
+            <option value="superavit">Superávit Calórico</option>
+        </select>
+        <button type="submit">Calcular</button>
+    </form>
+    <div id="resultadoDS"></div>
+
     <script>
+        function calcularObjetivo(tmb, escolha) {
+            if (escolha === "deficit") {
+                return tmb - 500;
+            }
+            if (escolha === "superavit"){
+                return tmb + 500;
+            }
+        }
         function calcularCaloriasMacronutrientes(carbosG, proteinasG, gordurasG) {
             const kcalCarbos = carbosG * 4;
             const kcalProteinas = proteinasG * 4;
@@ -265,6 +302,29 @@
                     <p>Proteínas: <strong>${kcalProteinas.toFixed(0)} kcal</strong> (de ${proteinas} g)</p>
                     <p>Gorduras: <strong>${kcalGorduras.toFixed(0)} kcal</strong> (de ${gorduras} g)</p>
                     <p><strong>Calorias totais: ${total.toFixed(0)} kcal</strong></p>
+                `);
+            });
+        });
+        $(document).ready(function(){
+            $("#deficitSuperavit").submit(function(event) {
+                event.preventDefault();
+                let peso = Number($("#pesoDS").val());
+                let altura = Number($("#alturaDS").val());
+                let idade = Number($("#idadeDS").val());
+                let sexo = String($("#sexoDS").val());
+                let escolha = String($("#objetivoDS").val());
+                let metaBasau = tmb(peso, altura, idade, sexo);
+                let objetivo = calcularObjetivo(metaBasau, escolha);
+                $("#resultadoDS").html (`
+                    <h2>Resultado</h2>
+                    <p>
+                        Sua TMB é de
+                        <strong>${metaBasau.toFixed(0)} kcal/dia</strong>.
+                    </p>
+                    <p>
+                        Consumo recomendado:
+                        <strong>${objetivo.toFixed(0)} kcal/dia</strong>.
+                    </p>
                 `);
             });
         });
